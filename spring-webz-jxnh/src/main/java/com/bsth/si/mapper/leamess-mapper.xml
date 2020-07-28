@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.bsth.si.mapper.LeamessMapper">
+
+	<resultMap id="leamess_result_map" type="com.bsth.si.entity.Leamess" >
+		<id column="leaMess_id" property="leaMessId" jdbcType="BIGINT"/>
+		<result column="leaMessContent" property="leaMessContent" jdbcType="VARCHAR"/>
+		<result column="leaMessTime" property="leaMessTime" jdbcType="TIMESTAMP"/>
+		<result column="leaMessIP" property="leaMessIp" jdbcType="VARCHAR"/>
+		<result column="ansContent" property="ansContent" jdbcType="VARCHAR"/>
+		<result column="ansTime" property="ansTime" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<select id="getPrimaryKey" resultType="java.lang.String">
+		select SEQ_t_leamess.nextval from dual
+	</select>
+	
+	<sql id="base_page_query_begin">
+		<![CDATA[
+		    SELECT * FROM (SELECT A.*,ROWNUM R FROM ( 
+		]]>
+	</sql>
+	
+	<sql id="base_page_query_end">
+		<![CDATA[
+			) A WHERE ROWNUM <= #{MAX} ) B WHERE R > #{MIN} 
+		]]>
+	</sql>
+	
+	<select id="getCount" resultType="java.lang.Integer">
+		select count(*) from t_leamess  
+		<where>
+			<if test="leaMessId!=null and leaMessId!=''">
+				and leaMess_id = #{leaMessId,jdbcType=BIGINT}
+			</if>
+			<if test="leaMessContent!=null and leaMessContent!=''">
+				and leaMessContent like '%'||#{leaMessContent,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="leaMessTimeBegin!=null and leaMessTimeBegin!=''">
+				and leaMessTime <![CDATA[ >= ]]> to_date(#{leaMessTimeBegin},  'YYYY-MM-DD') 
+			</if>
+			<if test="leaMessTimeEnd!=null and leaMessTimeEnd!=''">
+				and leaMessTime <![CDATA[ <= ]]> to_date(#{leaMessTimeEnd},  'YYYY-MM-DD') 
+			</if>
+			<if test="leaMessIp!=null and leaMessIp!=''">
+				and leaMessIP like '%'||#{leaMessIp,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="ansContent!=null and ansContent!=''">
+				and ansContent like '%'||#{ansContent,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="ansTimeBegin!=null and ansTimeBegin!=''">
+				and ansTime <![CDATA[ >= ]]> to_date(#{ansTimeBegin},  'YYYY-MM-DD') 
+			</if>
+			<if test="ansTimeEnd!=null and ansTimeEnd!=''">
+				and ansTime <![CDATA[ <= ]]> to_date(#{ansTimeEnd},  'YYYY-MM-DD') 
+			</if>
+		</where>
+	</select>
+	
+	<insert id="insertByEntity" parameterType="com.bsth.si.entity.Leamess">
+		insert into t_leamess
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+      		<if test="leaMessId!=null ">
+				leaMess_id,
+			</if>
+      		<if test="leaMessContent!=null ">
+				leaMessContent,
+			</if>
+      		<if test="leaMessTime!=null ">
+				leaMessTime,
+			</if>
+      		<if test="leaMessIp!=null ">
+				leaMessIP,
+			</if>
+      		<if test="ansContent!=null ">
+				ansContent,
+			</if>
+      		<if test="ansTime!=null ">
+				ansTime,
+			</if>
+    	</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+      		<if test="leaMessId!=null ">
+      			#{leaMessId,jdbcType=BIGINT},
+			</if>
+      		<if test="leaMessContent!=null ">
+      			#{leaMessContent,jdbcType=VARCHAR},
+			</if>
+      		<if test="leaMessTime!=null ">
+      			#{leaMessTime,jdbcType=TIMESTAMP},
+			</if>
+      		<if test="leaMessIp!=null ">
+      			#{leaMessIp,jdbcType=VARCHAR},
+			</if>
+      		<if test="ansContent!=null ">
+      			#{ansContent,jdbcType=VARCHAR},
+			</if>
+      		<if test="ansTime!=null ">
+      			#{ansTime,jdbcType=TIMESTAMP},
+			</if>
+    	</trim>
+	</insert>
+	
+	<delete id="deleteByEntity" parameterType="com.bsth.si.entity.Leamess">
+		delete from t_leamess
+		<where>
+      		<if test="leaMessId!=null ">
+				and leaMess_id=#{leaMessId,jdbcType=BIGINT}
+			</if>
+      		<if test="leaMessContent!=null ">
+				and leaMessContent=#{leaMessContent,jdbcType=VARCHAR}
+			</if>
+      		<if test="leaMessTime!=null ">
+				and leaMessTime=#{leaMessTime,jdbcType=TIMESTAMP}
+			</if>
+      		<if test="leaMessIp!=null ">
+				and leaMessIP=#{leaMessIp,jdbcType=VARCHAR}
+			</if>
+      		<if test="ansContent!=null ">
+				and ansContent=#{ansContent,jdbcType=VARCHAR}
+			</if>
+      		<if test="ansTime!=null ">
+				and ansTime=#{ansTime,jdbcType=TIMESTAMP}
+			</if>
+		</where>
+	</delete>
+
+	<update id="updateByEntity" parameterType="com.bsth.si.entity.Leamess">
+		update t_leamess
+		<set>
+			<if test="leaMessContent!=null ">
+				leaMessContent=#{leaMessContent,jdbcType=VARCHAR},
+			</if>
+			<if test="leaMessTime!=null ">
+				leaMessTime=#{leaMessTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="leaMessIp!=null ">
+				leaMessIP=#{leaMessIp,jdbcType=VARCHAR},
+			</if>
+			<if test="ansContent!=null ">
+				ansContent=#{ansContent,jdbcType=VARCHAR},
+			</if>
+			<if test="ansTime!=null ">
+				ansTime=#{ansTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		<where>
+			<if test="leaMessId!=null ">
+				and leaMess_id=#{leaMessId,jdbcType=BIGINT}
+			</if>
+		</where>
+	</update>
+
+	<select id="selectSingle" resultType="com.bsth.si.entity.Leamess" resultMap="leamess_result_map">
+		select leaMess_id,leaMessContent,leaMessTime,leaMessIP,ansContent,ansTime from t_leamess
+		<where>
+			<if test="leaMessId!=null ">
+				and leaMess_id=#{leaMessId,jdbcType=BIGINT}
+			</if>
+			<if test="leaMessContent!=null ">
+				and leaMessContent=#{leaMessContent,jdbcType=VARCHAR}
+			</if>
+			<if test="leaMessTime!=null ">
+				and leaMessTime=#{leaMessTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="leaMessIp!=null ">
+				and leaMessIP=#{leaMessIp,jdbcType=VARCHAR}
+			</if>
+			<if test="ansContent!=null ">
+				and ansContent=#{ansContent,jdbcType=VARCHAR}
+			</if>
+			<if test="ansTime!=null ">
+				and ansTime=#{ansTime,jdbcType=TIMESTAMP}
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectByObject" resultMap="leamess_result_map" >
+		select leaMess_id,leaMessContent,leaMessTime,leaMessIP,ansContent,ansTime from t_leamess
+		<where>
+			<if test="leaMessId!=null ">
+				and leaMess_id=#{leaMessId,jdbcType=BIGINT}
+			</if>
+			<if test="leaMessContent!=null ">
+				and leaMessContent=#{leaMessContent,jdbcType=VARCHAR}
+			</if>
+			<if test="leaMessTime!=null ">
+				and leaMessTime=#{leaMessTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="leaMessIp!=null ">
+				and leaMessIP=#{leaMessIp,jdbcType=VARCHAR}
+			</if>
+			<if test="ansContent!=null ">
+				and ansContent=#{ansContent,jdbcType=VARCHAR}
+			</if>
+			<if test="ansTime!=null ">
+				and ansTime=#{ansTime,jdbcType=TIMESTAMP}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryByObject" resultMap="leamess_result_map" >
+		<include refid="base_page_query_begin"/>
+		SELECT leaMess_id,leaMessContent,leaMessTime,leaMessIP,ansContent,ansTime FROM t_leamess 
+		<where>
+			<if test="leaMessId!=null and leaMessId!=''">
+				and leaMess_id = #{leaMessId,jdbcType=BIGINT}
+			</if>
+			<if test="leaMessContent!=null and leaMessContent!=''">
+				and leaMessContent like '%'||#{leaMessContent,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="leaMessTimeBegin!=null and leaMessTimeBegin!=''">
+				and leaMessTime <![CDATA[ >= ]]> to_date(#{leaMessTimeBegin},  'YYYY-MM-DD') 
+			</if>
+			<if test="leaMessTimeEnd!=null and leaMessTimeEnd!=''">
+				and leaMessTime <![CDATA[ <= ]]> to_date(#{leaMessTimeEnd},  'YYYY-MM-DD') 
+			</if>
+			<if test="leaMessIp!=null and leaMessIp!=''">
+				and leaMessIP like '%'||#{leaMessIp,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="ansContent!=null and ansContent!=''">
+				and ansContent like '%'||#{ansContent,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="ansTimeBegin!=null and ansTimeBegin!=''">
+				and ansTime <![CDATA[ >= ]]> to_date(#{ansTimeBegin},  'YYYY-MM-DD') 
+			</if>
+			<if test="ansTimeEnd!=null and ansTimeEnd!=''">
+				and ansTime <![CDATA[ <= ]]> to_date(#{ansTimeEnd},  'YYYY-MM-DD') 
+			</if>
+		</where>
+			<if test="sortName!=null and sortName!=''">
+				ORDER BY ${sortName} ${sortOrder}
+			</if>
+		<include refid="base_page_query_end"/>
+	</select>
+</mapper>

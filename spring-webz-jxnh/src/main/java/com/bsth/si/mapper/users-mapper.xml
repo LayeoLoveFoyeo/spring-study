@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.bsth.si.mapper.UsersMapper">
+
+	<resultMap id="users_result_map" type="com.bsth.si.entity.Users" >
+		<id column="id" property="id" jdbcType="BIGINT"/>
+		<result column="username" property="username" jdbcType="VARCHAR"/>
+		<result column="password" property="password" jdbcType="VARCHAR"/>
+		<result column="displayName" property="displayName" jdbcType="VARCHAR"/>
+		<result column="realName" property="realName" jdbcType="VARCHAR"/>
+		<result column="birthday" property="birthday" jdbcType="TIMESTAMP"/>
+		<result column="phone" property="phone" jdbcType="BIGINT"/>
+		<result column="qq" property="qq" jdbcType="BIGINT"/>
+		<result column="Email" property="email" jdbcType="VARCHAR"/>
+		<result column="updateTime" property="updateTime" jdbcType="TIMESTAMP"/>
+		<result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<select id="getPrimaryKey" resultType="java.lang.String">
+		select SEQ_t_users.nextval from dual
+	</select>
+	
+	<sql id="base_page_query_begin">
+		<![CDATA[
+		    SELECT * FROM (SELECT A.*,ROWNUM R FROM ( 
+		]]>
+	</sql>
+	
+	<sql id="base_page_query_end">
+		<![CDATA[
+			) A WHERE ROWNUM <= #{MAX} ) B WHERE R > #{MIN} 
+		]]>
+	</sql>
+	
+	<select id="getCount" resultType="java.lang.Integer">
+		select count(*) from t_users  
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id,jdbcType=BIGINT}
+			</if>
+			<if test="username!=null and username!=''">
+				and username like '%'||#{username,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="password!=null and password!=''">
+				and password like '%'||#{password,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="displayName!=null and displayName!=''">
+				and displayName like '%'||#{displayName,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="realName!=null and realName!=''">
+				and realName like '%'||#{realName,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="birthdayBegin!=null and birthdayBegin!=''">
+				and birthday <![CDATA[ >= ]]> to_date(#{birthdayBegin},  'YYYY-MM-DD') 
+			</if>
+			<if test="birthdayEnd!=null and birthdayEnd!=''">
+				and birthday <![CDATA[ <= ]]> to_date(#{birthdayEnd},  'YYYY-MM-DD') 
+			</if>
+			<if test="phone!=null and phone!=''">
+				and phone = #{phone,jdbcType=BIGINT}
+			</if>
+			<if test="qq!=null and qq!=''">
+				and qq = #{qq,jdbcType=BIGINT}
+			</if>
+			<if test="email!=null and email!=''">
+				and Email like '%'||#{Email,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="updateTimeBegin!=null and updateTimeBegin!=''">
+				and updateTime <![CDATA[ >= ]]> to_date(#{updateTimeBegin},  'YYYY-MM-DD') 
+			</if>
+			<if test="updateTimeEnd!=null and updateTimeEnd!=''">
+				and updateTime <![CDATA[ <= ]]> to_date(#{updateTimeEnd},  'YYYY-MM-DD') 
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+				and createTime <![CDATA[ >= ]]> to_date(#{createTimeBegin},  'YYYY-MM-DD') 
+			</if>
+			<if test="createTimeEnd!=null and createTimeEnd!=''">
+				and createTime <![CDATA[ <= ]]> to_date(#{createTimeEnd},  'YYYY-MM-DD') 
+			</if>
+		</where>
+	</select>
+	
+	<insert id="insertByEntity" parameterType="com.bsth.si.entity.Users">
+		insert into t_users
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+      		<if test="id!=null ">
+				id,
+			</if>
+      		<if test="username!=null ">
+				username,
+			</if>
+      		<if test="password!=null ">
+				password,
+			</if>
+      		<if test="displayName!=null ">
+				displayName,
+			</if>
+      		<if test="realName!=null ">
+				realName,
+			</if>
+      		<if test="birthday!=null ">
+				birthday,
+			</if>
+      		<if test="phone!=null ">
+				phone,
+			</if>
+      		<if test="qq!=null ">
+				qq,
+			</if>
+      		<if test="email!=null ">
+				Email,
+			</if>
+      		<if test="updateTime!=null ">
+				updateTime,
+			</if>
+      		<if test="createTime!=null ">
+				createTime,
+			</if>
+    	</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+      		<if test="id!=null ">
+      			#{id,jdbcType=BIGINT},
+			</if>
+      		<if test="username!=null ">
+      			#{username,jdbcType=VARCHAR},
+			</if>
+      		<if test="password!=null ">
+      			#{password,jdbcType=VARCHAR},
+			</if>
+      		<if test="displayName!=null ">
+      			#{displayName,jdbcType=VARCHAR},
+			</if>
+      		<if test="realName!=null ">
+      			#{realName,jdbcType=VARCHAR},
+			</if>
+      		<if test="birthday!=null ">
+      			#{birthday,jdbcType=TIMESTAMP},
+			</if>
+      		<if test="phone!=null ">
+      			#{phone,jdbcType=BIGINT},
+			</if>
+      		<if test="qq!=null ">
+      			#{qq,jdbcType=BIGINT},
+			</if>
+      		<if test="email!=null ">
+      			#{Email,jdbcType=VARCHAR},
+			</if>
+      		<if test="updateTime!=null ">
+      			#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+      		<if test="createTime!=null ">
+      			#{createTime,jdbcType=TIMESTAMP},
+			</if>
+    	</trim>
+	</insert>
+	
+	<delete id="deleteByEntity" parameterType="com.bsth.si.entity.Users">
+		delete from t_users
+		<where>
+      		<if test="id!=null ">
+				and id=#{id,jdbcType=BIGINT}
+			</if>
+      		<if test="username!=null ">
+				and username=#{username,jdbcType=VARCHAR}
+			</if>
+      		<if test="password!=null ">
+				and password=#{password,jdbcType=VARCHAR}
+			</if>
+      		<if test="displayName!=null ">
+				and displayName=#{displayName,jdbcType=VARCHAR}
+			</if>
+      		<if test="realName!=null ">
+				and realName=#{realName,jdbcType=VARCHAR}
+			</if>
+      		<if test="birthday!=null ">
+				and birthday=#{birthday,jdbcType=TIMESTAMP}
+			</if>
+      		<if test="phone!=null ">
+				and phone=#{phone,jdbcType=BIGINT}
+			</if>
+      		<if test="qq!=null ">
+				and qq=#{qq,jdbcType=BIGINT}
+			</if>
+      		<if test="email!=null ">
+				and Email=#{Email,jdbcType=VARCHAR}
+			</if>
+      		<if test="updateTime!=null ">
+				and updateTime=#{updateTime,jdbcType=TIMESTAMP}
+			</if>
+      		<if test="createTime!=null ">
+				and createTime=#{createTime,jdbcType=TIMESTAMP}
+			</if>
+		</where>
+	</delete>
+
+	<update id="updateByEntity" parameterType="com.bsth.si.entity.Users">
+		update t_users
+		<set>
+			<if test="username!=null ">
+				username=#{username,jdbcType=VARCHAR},
+			</if>
+			<if test="password!=null ">
+				password=#{password,jdbcType=VARCHAR},
+			</if>
+			<if test="displayName!=null ">
+				displayName=#{displayName,jdbcType=VARCHAR},
+			</if>
+			<if test="realName!=null ">
+				realName=#{realName,jdbcType=VARCHAR},
+			</if>
+			<if test="birthday!=null ">
+				birthday=#{birthday,jdbcType=TIMESTAMP},
+			</if>
+			<if test="phone!=null ">
+				phone=#{phone,jdbcType=BIGINT},
+			</if>
+			<if test="qq!=null ">
+				qq=#{qq,jdbcType=BIGINT},
+			</if>
+			<if test="email!=null ">
+				Email=#{Email,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime!=null ">
+				updateTime=#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime!=null ">
+				createTime=#{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		<where>
+			<if test="id!=null ">
+				and id=#{id,jdbcType=BIGINT}
+			</if>
+		</where>
+	</update>
+
+	<select id="selectSingle" resultType="com.bsth.si.entity.Users" resultMap="users_result_map">
+		select id,username,password,displayName,realName,birthday,phone,qq,Email,updateTime,createTime from t_users
+		<where>
+			<if test="id!=null ">
+				and id=#{id,jdbcType=BIGINT}
+			</if>
+			<if test="username!=null ">
+				and username=#{username,jdbcType=VARCHAR}
+			</if>
+			<if test="password!=null ">
+				and password=#{password,jdbcType=VARCHAR}
+			</if>
+			<if test="displayName!=null ">
+				and displayName=#{displayName,jdbcType=VARCHAR}
+			</if>
+			<if test="realName!=null ">
+				and realName=#{realName,jdbcType=VARCHAR}
+			</if>
+			<if test="birthday!=null ">
+				and birthday=#{birthday,jdbcType=TIMESTAMP}
+			</if>
+			<if test="phone!=null ">
+				and phone=#{phone,jdbcType=BIGINT}
+			</if>
+			<if test="qq!=null ">
+				and qq=#{qq,jdbcType=BIGINT}
+			</if>
+			<if test="email!=null ">
+				and Email=#{Email,jdbcType=VARCHAR}
+			</if>
+			<if test="updateTime!=null ">
+				and updateTime=#{updateTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="createTime!=null ">
+				and createTime=#{createTime,jdbcType=TIMESTAMP}
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectByObject" resultMap="users_result_map" >
+		select id,username,password,displayName,realName,birthday,phone,qq,Email,updateTime,createTime from t_users
+		<where>
+			<if test="id!=null ">
+				and id=#{id,jdbcType=BIGINT}
+			</if>
+			<if test="username!=null ">
+				and username=#{username,jdbcType=VARCHAR}
+			</if>
+			<if test="password!=null ">
+				and password=#{password,jdbcType=VARCHAR}
+			</if>
+			<if test="displayName!=null ">
+				and displayName=#{displayName,jdbcType=VARCHAR}
+			</if>
+			<if test="realName!=null ">
+				and realName=#{realName,jdbcType=VARCHAR}
+			</if>
+			<if test="birthday!=null ">
+				and birthday=#{birthday,jdbcType=TIMESTAMP}
+			</if>
+			<if test="phone!=null ">
+				and phone=#{phone,jdbcType=BIGINT}
+			</if>
+			<if test="qq!=null ">
+				and qq=#{qq,jdbcType=BIGINT}
+			</if>
+			<if test="email!=null ">
+				and Email=#{Email,jdbcType=VARCHAR}
+			</if>
+			<if test="updateTime!=null ">
+				and updateTime=#{updateTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="createTime!=null ">
+				and createTime=#{createTime,jdbcType=TIMESTAMP}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryByObject" resultMap="users_result_map" >
+		<include refid="base_page_query_begin"/>
+		SELECT id,username,password,displayName,realName,birthday,phone,qq,Email,updateTime,createTime FROM t_users 
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id,jdbcType=BIGINT}
+			</if>
+			<if test="username!=null and username!=''">
+				and username like '%'||#{username,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="password!=null and password!=''">
+				and password like '%'||#{password,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="displayName!=null and displayName!=''">
+				and displayName like '%'||#{displayName,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="realName!=null and realName!=''">
+				and realName like '%'||#{realName,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="birthdayBegin!=null and birthdayBegin!=''">
+				and birthday <![CDATA[ >= ]]> to_date(#{birthdayBegin},  'YYYY-MM-DD') 
+			</if>
+			<if test="birthdayEnd!=null and birthdayEnd!=''">
+				and birthday <![CDATA[ <= ]]> to_date(#{birthdayEnd},  'YYYY-MM-DD') 
+			</if>
+			<if test="phone!=null and phone!=''">
+				and phone = #{phone,jdbcType=BIGINT}
+			</if>
+			<if test="qq!=null and qq!=''">
+				and qq = #{qq,jdbcType=BIGINT}
+			</if>
+			<if test="email!=null and email!=''">
+				and Email like '%'||#{Email,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="updateTimeBegin!=null and updateTimeBegin!=''">
+				and updateTime <![CDATA[ >= ]]> to_date(#{updateTimeBegin},  'YYYY-MM-DD') 
+			</if>
+			<if test="updateTimeEnd!=null and updateTimeEnd!=''">
+				and updateTime <![CDATA[ <= ]]> to_date(#{updateTimeEnd},  'YYYY-MM-DD') 
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+				and createTime <![CDATA[ >= ]]> to_date(#{createTimeBegin},  'YYYY-MM-DD') 
+			</if>
+			<if test="createTimeEnd!=null and createTimeEnd!=''">
+				and createTime <![CDATA[ <= ]]> to_date(#{createTimeEnd},  'YYYY-MM-DD') 
+			</if>
+		</where>
+			<if test="sortName!=null and sortName!=''">
+				ORDER BY ${sortName} ${sortOrder}
+			</if>
+		<include refid="base_page_query_end"/>
+	</select>
+</mapper>

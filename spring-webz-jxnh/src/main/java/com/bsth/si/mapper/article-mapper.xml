@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.bsth.si.mapper.ArticleMapper">
+
+	<resultMap id="article_result_map" type="com.bsth.si.entity.Article" >
+		<id column="article_id" property="articleId" jdbcType="BIGINT"/>
+		<result column="articleName" property="articleName" jdbcType="VARCHAR"/>
+		<result column="articleDress" property="articleDress" jdbcType="VARCHAR"/>
+		<result column="articleClass" property="articleClass" jdbcType="BIGINT"/>
+		<result column="createdTime" property="createdTime" jdbcType="TIMESTAMP"/>
+		<result column="publicTime" property="publicTime" jdbcType="TIMESTAMP"/>
+		<result column="articleContent" property="articleContent" jdbcType="VARCHAR"/>
+		<result column="createdBy" property="createdBy" jdbcType="BIGINT"/>
+		<result column="updateBy" property="updateBy" jdbcType="BIGINT"/>
+		<result column="updateTime" property="updateTime" jdbcType="TIMESTAMP"/>
+		<result column="writer" property="writer" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="getPrimaryKey" resultType="java.lang.String">
+		select SEQ_t_article.nextval from dual
+	</select>
+	
+	<sql id="base_page_query_begin">
+		<![CDATA[
+		    SELECT * FROM (SELECT A.*,ROWNUM R FROM ( 
+		]]>
+	</sql>
+	
+	<sql id="base_page_query_end">
+		<![CDATA[
+			) A WHERE ROWNUM <= #{MAX} ) B WHERE R > #{MIN} 
+		]]>
+	</sql>
+	
+	<select id="getCount" resultType="java.lang.Integer">
+		select count(*) from t_article  
+		<where>
+			<if test="articleId!=null and articleId!=''">
+				and article_id = #{articleId,jdbcType=BIGINT}
+			</if>
+			<if test="articleName!=null and articleName!=''">
+				and articleName like '%'||#{articleName,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="articleDress!=null and articleDress!=''">
+				and articleDress like '%'||#{articleDress,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="articleClass!=null and articleClass!=''">
+				and articleClass = #{articleClass,jdbcType=BIGINT}
+			</if>
+			<if test="createdTimeBegin!=null and createdTimeBegin!=''">
+				and createdTime <![CDATA[ >= ]]> to_date(#{createdTimeBegin},  'YYYY-MM-DD') 
+			</if>
+			<if test="createdTimeEnd!=null and createdTimeEnd!=''">
+				and createdTime <![CDATA[ <= ]]> to_date(#{createdTimeEnd},  'YYYY-MM-DD') 
+			</if>
+			<if test="publicTimeBegin!=null and publicTimeBegin!=''">
+				and publicTime <![CDATA[ >= ]]> to_date(#{publicTimeBegin},  'YYYY-MM-DD') 
+			</if>
+			<if test="publicTimeEnd!=null and publicTimeEnd!=''">
+				and publicTime <![CDATA[ <= ]]> to_date(#{publicTimeEnd},  'YYYY-MM-DD') 
+			</if>
+			<if test="articleContent!=null and articleContent!=''">
+				and articleContent like '%'||#{articleContent,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="createdBy!=null and createdBy!=''">
+				and createdBy = #{createdBy,jdbcType=BIGINT}
+			</if>
+			<if test="updateBy!=null and updateBy!=''">
+				and updateBy = #{updateBy,jdbcType=BIGINT}
+			</if>
+			<if test="updateTimeBegin!=null and updateTimeBegin!=''">
+				and updateTime <![CDATA[ >= ]]> to_date(#{updateTimeBegin},  'YYYY-MM-DD') 
+			</if>
+			<if test="updateTimeEnd!=null and updateTimeEnd!=''">
+				and updateTime <![CDATA[ <= ]]> to_date(#{updateTimeEnd},  'YYYY-MM-DD') 
+			</if>
+			<if test="writer!=null and writer!=''">
+				and writer like '%'||#{writer,jdbcType=VARCHAR}||'%'
+			</if>
+		</where>
+	</select>
+	
+	<insert id="insertByEntity" parameterType="com.bsth.si.entity.Article">
+		insert into t_article
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+      		<if test="articleId!=null ">
+				article_id,
+			</if>
+      		<if test="articleName!=null ">
+				articleName,
+			</if>
+      		<if test="articleDress!=null ">
+				articleDress,
+			</if>
+      		<if test="articleClass!=null ">
+				articleClass,
+			</if>
+      		<if test="createdTime!=null ">
+				createdTime,
+			</if>
+      		<if test="publicTime!=null ">
+				publicTime,
+			</if>
+      		<if test="articleContent!=null ">
+				articleContent,
+			</if>
+      		<if test="createdBy!=null ">
+				createdBy,
+			</if>
+      		<if test="updateBy!=null ">
+				updateBy,
+			</if>
+      		<if test="updateTime!=null ">
+				updateTime,
+			</if>
+      		<if test="writer!=null ">
+				writer,
+			</if>
+    	</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+      		<if test="articleId!=null ">
+      			#{articleId,jdbcType=BIGINT},
+			</if>
+      		<if test="articleName!=null ">
+      			#{articleName,jdbcType=VARCHAR},
+			</if>
+      		<if test="articleDress!=null ">
+      			#{articleDress,jdbcType=VARCHAR},
+			</if>
+      		<if test="articleClass!=null ">
+      			#{articleClass,jdbcType=BIGINT},
+			</if>
+      		<if test="createdTime!=null ">
+      			#{createdTime,jdbcType=TIMESTAMP},
+			</if>
+      		<if test="publicTime!=null ">
+      			#{publicTime,jdbcType=TIMESTAMP},
+			</if>
+      		<if test="articleContent!=null ">
+      			#{articleContent,jdbcType=VARCHAR},
+			</if>
+      		<if test="createdBy!=null ">
+      			#{createdBy,jdbcType=BIGINT},
+			</if>
+      		<if test="updateBy!=null ">
+      			#{updateBy,jdbcType=BIGINT},
+			</if>
+      		<if test="updateTime!=null ">
+      			#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+      		<if test="writer!=null ">
+      			#{writer,jdbcType=VARCHAR},
+			</if>
+    	</trim>
+	</insert>
+	
+	<delete id="deleteByEntity" parameterType="com.bsth.si.entity.Article">
+		delete from t_article
+		<where>
+      		<if test="articleId!=null ">
+				and article_id=#{articleId,jdbcType=BIGINT}
+			</if>
+      		<if test="articleName!=null ">
+				and articleName=#{articleName,jdbcType=VARCHAR}
+			</if>
+      		<if test="articleDress!=null ">
+				and articleDress=#{articleDress,jdbcType=VARCHAR}
+			</if>
+      		<if test="articleClass!=null ">
+				and articleClass=#{articleClass,jdbcType=BIGINT}
+			</if>
+      		<if test="createdTime!=null ">
+				and createdTime=#{createdTime,jdbcType=TIMESTAMP}
+			</if>
+      		<if test="publicTime!=null ">
+				and publicTime=#{publicTime,jdbcType=TIMESTAMP}
+			</if>
+      		<if test="articleContent!=null ">
+				and articleContent=#{articleContent,jdbcType=VARCHAR}
+			</if>
+      		<if test="createdBy!=null ">
+				and createdBy=#{createdBy,jdbcType=BIGINT}
+			</if>
+      		<if test="updateBy!=null ">
+				and updateBy=#{updateBy,jdbcType=BIGINT}
+			</if>
+      		<if test="updateTime!=null ">
+				and updateTime=#{updateTime,jdbcType=TIMESTAMP}
+			</if>
+      		<if test="writer!=null ">
+				and writer=#{writer,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</delete>
+
+	<update id="updateByEntity" parameterType="com.bsth.si.entity.Article">
+		update t_article
+		<set>
+			<if test="articleName!=null ">
+				articleName=#{articleName,jdbcType=VARCHAR},
+			</if>
+			<if test="articleDress!=null ">
+				articleDress=#{articleDress,jdbcType=VARCHAR},
+			</if>
+			<if test="articleClass!=null ">
+				articleClass=#{articleClass,jdbcType=BIGINT},
+			</if>
+			<if test="createdTime!=null ">
+				createdTime=#{createdTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="publicTime!=null ">
+				publicTime=#{publicTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="articleContent!=null ">
+				articleContent=#{articleContent,jdbcType=VARCHAR},
+			</if>
+			<if test="createdBy!=null ">
+				createdBy=#{createdBy,jdbcType=BIGINT},
+			</if>
+			<if test="updateBy!=null ">
+				updateBy=#{updateBy,jdbcType=BIGINT},
+			</if>
+			<if test="updateTime!=null ">
+				updateTime=#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="writer!=null ">
+				writer=#{writer,jdbcType=VARCHAR},
+			</if>
+		</set>
+		<where>
+			<if test="articleId!=null ">
+				and article_id=#{articleId,jdbcType=BIGINT}
+			</if>
+		</where>
+	</update>
+
+	<select id="selectSingle" resultType="com.bsth.si.entity.Article" resultMap="article_result_map">
+		select article_id,articleName,articleDress,articleClass,createdTime,publicTime,articleContent,createdBy,updateBy,updateTime,writer from t_article
+		<where>
+			<if test="articleId!=null ">
+				and article_id=#{articleId,jdbcType=BIGINT}
+			</if>
+			<if test="articleName!=null ">
+				and articleName=#{articleName,jdbcType=VARCHAR}
+			</if>
+			<if test="articleDress!=null ">
+				and articleDress=#{articleDress,jdbcType=VARCHAR}
+			</if>
+			<if test="articleClass!=null ">
+				and articleClass=#{articleClass,jdbcType=BIGINT}
+			</if>
+			<if test="createdTime!=null ">
+				and createdTime=#{createdTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="publicTime!=null ">
+				and publicTime=#{publicTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="articleContent!=null ">
+				and articleContent=#{articleContent,jdbcType=VARCHAR}
+			</if>
+			<if test="createdBy!=null ">
+				and createdBy=#{createdBy,jdbcType=BIGINT}
+			</if>
+			<if test="updateBy!=null ">
+				and updateBy=#{updateBy,jdbcType=BIGINT}
+			</if>
+			<if test="updateTime!=null ">
+				and updateTime=#{updateTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="writer!=null ">
+				and writer=#{writer,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectByObject" resultMap="article_result_map" >
+		select article_id,articleName,articleDress,articleClass,createdTime,publicTime,articleContent,createdBy,updateBy,updateTime,writer from t_article
+		<where>
+			<if test="articleId!=null ">
+				and article_id=#{articleId,jdbcType=BIGINT}
+			</if>
+			<if test="articleName!=null ">
+				and articleName=#{articleName,jdbcType=VARCHAR}
+			</if>
+			<if test="articleDress!=null ">
+				and articleDress=#{articleDress,jdbcType=VARCHAR}
+			</if>
+			<if test="articleClass!=null ">
+				and articleClass=#{articleClass,jdbcType=BIGINT}
+			</if>
+			<if test="createdTime!=null ">
+				and createdTime=#{createdTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="publicTime!=null ">
+				and publicTime=#{publicTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="articleContent!=null ">
+				and articleContent=#{articleContent,jdbcType=VARCHAR}
+			</if>
+			<if test="createdBy!=null ">
+				and createdBy=#{createdBy,jdbcType=BIGINT}
+			</if>
+			<if test="updateBy!=null ">
+				and updateBy=#{updateBy,jdbcType=BIGINT}
+			</if>
+			<if test="updateTime!=null ">
+				and updateTime=#{updateTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="writer!=null ">
+				and writer=#{writer,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryByObject" resultMap="article_result_map" >
+		<include refid="base_page_query_begin"/>
+		SELECT article_id,articleName,articleDress,articleClass,createdTime,publicTime,articleContent,createdBy,updateBy,updateTime,writer FROM t_article 
+		<where>
+			<if test="articleId!=null and articleId!=''">
+				and article_id = #{articleId,jdbcType=BIGINT}
+			</if>
+			<if test="articleName!=null and articleName!=''">
+				and articleName like '%'||#{articleName,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="articleDress!=null and articleDress!=''">
+				and articleDress like '%'||#{articleDress,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="articleClass!=null and articleClass!=''">
+				and articleClass = #{articleClass,jdbcType=BIGINT}
+			</if>
+			<if test="createdTimeBegin!=null and createdTimeBegin!=''">
+				and createdTime <![CDATA[ >= ]]> to_date(#{createdTimeBegin},  'YYYY-MM-DD') 
+			</if>
+			<if test="createdTimeEnd!=null and createdTimeEnd!=''">
+				and createdTime <![CDATA[ <= ]]> to_date(#{createdTimeEnd},  'YYYY-MM-DD') 
+			</if>
+			<if test="publicTimeBegin!=null and publicTimeBegin!=''">
+				and publicTime <![CDATA[ >= ]]> to_date(#{publicTimeBegin},  'YYYY-MM-DD') 
+			</if>
+			<if test="publicTimeEnd!=null and publicTimeEnd!=''">
+				and publicTime <![CDATA[ <= ]]> to_date(#{publicTimeEnd},  'YYYY-MM-DD') 
+			</if>
+			<if test="articleContent!=null and articleContent!=''">
+				and articleContent like '%'||#{articleContent,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="createdBy!=null and createdBy!=''">
+				and createdBy = #{createdBy,jdbcType=BIGINT}
+			</if>
+			<if test="updateBy!=null and updateBy!=''">
+				and updateBy = #{updateBy,jdbcType=BIGINT}
+			</if>
+			<if test="updateTimeBegin!=null and updateTimeBegin!=''">
+				and updateTime <![CDATA[ >= ]]> to_date(#{updateTimeBegin},  'YYYY-MM-DD') 
+			</if>
+			<if test="updateTimeEnd!=null and updateTimeEnd!=''">
+				and updateTime <![CDATA[ <= ]]> to_date(#{updateTimeEnd},  'YYYY-MM-DD') 
+			</if>
+			<if test="writer!=null and writer!=''">
+				and writer like '%'||#{writer,jdbcType=VARCHAR}||'%'
+			</if>
+		</where>
+			<if test="sortName!=null and sortName!=''">
+				ORDER BY ${sortName} ${sortOrder}
+			</if>
+		<include refid="base_page_query_end"/>
+	</select>
+</mapper>

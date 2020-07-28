@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.bsth.si.mapper.ProductionMapper">
+
+	<resultMap id="production_result_map" type="com.bsth.si.entity.Production" >
+		<id column="id" property="id" jdbcType="BIGINT"/>
+		<result column="proName" property="proName" jdbcType="VARCHAR"/>
+		<result column="proClass" property="proClass" jdbcType="BIGINT"/>
+		<result column="ripeTime" property="ripeTime" jdbcType="VARCHAR"/>
+		<result column="cropper" property="cropper" jdbcType="BIGINT"/>
+		<result column="price" property="price" jdbcType="VARCHAR"/>
+		<result column="publishTime" property="publishTime" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<select id="getPrimaryKey" resultType="java.lang.String">
+		select SEQ_t_production.nextval from dual
+	</select>
+	
+	<sql id="base_page_query_begin">
+		<![CDATA[
+		    SELECT * FROM (SELECT A.*,ROWNUM R FROM ( 
+		]]>
+	</sql>
+	
+	<sql id="base_page_query_end">
+		<![CDATA[
+			) A WHERE ROWNUM <= #{MAX} ) B WHERE R > #{MIN} 
+		]]>
+	</sql>
+	
+	<select id="getCount" resultType="java.lang.Integer">
+		select count(*) from t_production  
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id,jdbcType=BIGINT}
+			</if>
+			<if test="proName!=null and proName!=''">
+				and proName like '%'||#{proName,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="proClass!=null and proClass!=''">
+				and proClass = #{proClass,jdbcType=BIGINT}
+			</if>
+			<if test="ripeTime!=null and ripeTime!=''">
+				and ripeTime like '%'||#{ripeTime,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="cropper!=null and cropper!=''">
+				and cropper = #{cropper,jdbcType=BIGINT}
+			</if>
+			<if test="price!=null and price!=''">
+				and price like '%'||#{price,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="publishTimeBegin!=null and publishTimeBegin!=''">
+				and publishTime <![CDATA[ >= ]]> to_date(#{publishTimeBegin},  'YYYY-MM-DD') 
+			</if>
+			<if test="publishTimeEnd!=null and publishTimeEnd!=''">
+				and publishTime <![CDATA[ <= ]]> to_date(#{publishTimeEnd},  'YYYY-MM-DD') 
+			</if>
+		</where>
+	</select>
+	
+	<insert id="insertByEntity" parameterType="com.bsth.si.entity.Production">
+		insert into t_production
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+      		<if test="id!=null ">
+				id,
+			</if>
+      		<if test="proName!=null ">
+				proName,
+			</if>
+      		<if test="proClass!=null ">
+				proClass,
+			</if>
+      		<if test="ripeTime!=null ">
+				ripeTime,
+			</if>
+      		<if test="cropper!=null ">
+				cropper,
+			</if>
+      		<if test="price!=null ">
+				price,
+			</if>
+      		<if test="publishTime!=null ">
+				publishTime,
+			</if>
+    	</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+      		<if test="id!=null ">
+      			#{id,jdbcType=BIGINT},
+			</if>
+      		<if test="proName!=null ">
+      			#{proName,jdbcType=VARCHAR},
+			</if>
+      		<if test="proClass!=null ">
+      			#{proClass,jdbcType=BIGINT},
+			</if>
+      		<if test="ripeTime!=null ">
+      			#{ripeTime,jdbcType=VARCHAR},
+			</if>
+      		<if test="cropper!=null ">
+      			#{cropper,jdbcType=BIGINT},
+			</if>
+      		<if test="price!=null ">
+      			#{price,jdbcType=VARCHAR},
+			</if>
+      		<if test="publishTime!=null ">
+      			#{publishTime,jdbcType=TIMESTAMP},
+			</if>
+    	</trim>
+	</insert>
+	
+	<delete id="deleteByEntity" parameterType="com.bsth.si.entity.Production">
+		delete from t_production
+		<where>
+      		<if test="id!=null ">
+				and id=#{id,jdbcType=BIGINT}
+			</if>
+      		<if test="proName!=null ">
+				and proName=#{proName,jdbcType=VARCHAR}
+			</if>
+      		<if test="proClass!=null ">
+				and proClass=#{proClass,jdbcType=BIGINT}
+			</if>
+      		<if test="ripeTime!=null ">
+				and ripeTime=#{ripeTime,jdbcType=VARCHAR}
+			</if>
+      		<if test="cropper!=null ">
+				and cropper=#{cropper,jdbcType=BIGINT}
+			</if>
+      		<if test="price!=null ">
+				and price=#{price,jdbcType=VARCHAR}
+			</if>
+      		<if test="publishTime!=null ">
+				and publishTime=#{publishTime,jdbcType=TIMESTAMP}
+			</if>
+		</where>
+	</delete>
+
+	<update id="updateByEntity" parameterType="com.bsth.si.entity.Production">
+		update t_production
+		<set>
+			<if test="proName!=null ">
+				proName=#{proName,jdbcType=VARCHAR},
+			</if>
+			<if test="proClass!=null ">
+				proClass=#{proClass,jdbcType=BIGINT},
+			</if>
+			<if test="ripeTime!=null ">
+				ripeTime=#{ripeTime,jdbcType=VARCHAR},
+			</if>
+			<if test="cropper!=null ">
+				cropper=#{cropper,jdbcType=BIGINT},
+			</if>
+			<if test="price!=null ">
+				price=#{price,jdbcType=VARCHAR},
+			</if>
+			<if test="publishTime!=null ">
+				publishTime=#{publishTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		<where>
+			<if test="id!=null ">
+				and id=#{id,jdbcType=BIGINT}
+			</if>
+		</where>
+	</update>
+
+	<select id="selectSingle" resultType="com.bsth.si.entity.Production" resultMap="production_result_map">
+		select id,proName,proClass,ripeTime,cropper,price,publishTime from t_production
+		<where>
+			<if test="id!=null ">
+				and id=#{id,jdbcType=BIGINT}
+			</if>
+			<if test="proName!=null ">
+				and proName=#{proName,jdbcType=VARCHAR}
+			</if>
+			<if test="proClass!=null ">
+				and proClass=#{proClass,jdbcType=BIGINT}
+			</if>
+			<if test="ripeTime!=null ">
+				and ripeTime=#{ripeTime,jdbcType=VARCHAR}
+			</if>
+			<if test="cropper!=null ">
+				and cropper=#{cropper,jdbcType=BIGINT}
+			</if>
+			<if test="price!=null ">
+				and price=#{price,jdbcType=VARCHAR}
+			</if>
+			<if test="publishTime!=null ">
+				and publishTime=#{publishTime,jdbcType=TIMESTAMP}
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectByObject" resultMap="production_result_map" >
+		select id,proName,proClass,ripeTime,cropper,price,publishTime from t_production
+		<where>
+			<if test="id!=null ">
+				and id=#{id,jdbcType=BIGINT}
+			</if>
+			<if test="proName!=null ">
+				and proName=#{proName,jdbcType=VARCHAR}
+			</if>
+			<if test="proClass!=null ">
+				and proClass=#{proClass,jdbcType=BIGINT}
+			</if>
+			<if test="ripeTime!=null ">
+				and ripeTime=#{ripeTime,jdbcType=VARCHAR}
+			</if>
+			<if test="cropper!=null ">
+				and cropper=#{cropper,jdbcType=BIGINT}
+			</if>
+			<if test="price!=null ">
+				and price=#{price,jdbcType=VARCHAR}
+			</if>
+			<if test="publishTime!=null ">
+				and publishTime=#{publishTime,jdbcType=TIMESTAMP}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryByObject" resultMap="production_result_map" >
+		<include refid="base_page_query_begin"/>
+		SELECT id,proName,proClass,ripeTime,cropper,price,publishTime FROM t_production 
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id,jdbcType=BIGINT}
+			</if>
+			<if test="proName!=null and proName!=''">
+				and proName like '%'||#{proName,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="proClass!=null and proClass!=''">
+				and proClass = #{proClass,jdbcType=BIGINT}
+			</if>
+			<if test="ripeTime!=null and ripeTime!=''">
+				and ripeTime like '%'||#{ripeTime,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="cropper!=null and cropper!=''">
+				and cropper = #{cropper,jdbcType=BIGINT}
+			</if>
+			<if test="price!=null and price!=''">
+				and price like '%'||#{price,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="publishTimeBegin!=null and publishTimeBegin!=''">
+				and publishTime <![CDATA[ >= ]]> to_date(#{publishTimeBegin},  'YYYY-MM-DD') 
+			</if>
+			<if test="publishTimeEnd!=null and publishTimeEnd!=''">
+				and publishTime <![CDATA[ <= ]]> to_date(#{publishTimeEnd},  'YYYY-MM-DD') 
+			</if>
+		</where>
+			<if test="sortName!=null and sortName!=''">
+				ORDER BY ${sortName} ${sortOrder}
+			</if>
+		<include refid="base_page_query_end"/>
+	</select>
+</mapper>

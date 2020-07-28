@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.bsth.si.mapper.ProductionclassMapper">
+
+	<resultMap id="productionclass_result_map" type="com.bsth.si.entity.Productionclass" >
+		<id column="id" property="id" jdbcType="BIGINT"/>
+		<result column="level" property="level" jdbcType="BIGINT"/>
+		<result column="fatherNode" property="fatherNode" jdbcType="BIGINT"/>
+		<result column="nodeId" property="nodeId" jdbcType="BIGINT"/>
+		<result column="className" property="className" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="getPrimaryKey" resultType="java.lang.String">
+		select SEQ_t_productionclass.nextval from dual
+	</select>
+	
+	<sql id="base_page_query_begin">
+		<![CDATA[
+		    SELECT * FROM (SELECT A.*,ROWNUM R FROM ( 
+		]]>
+	</sql>
+	
+	<sql id="base_page_query_end">
+		<![CDATA[
+			) A WHERE ROWNUM <= #{MAX} ) B WHERE R > #{MIN} 
+		]]>
+	</sql>
+	
+	<select id="getCount" resultType="java.lang.Integer">
+		select count(*) from t_productionclass  
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id,jdbcType=BIGINT}
+			</if>
+			<if test="level!=null and level!=''">
+				and level = #{level,jdbcType=BIGINT}
+			</if>
+			<if test="fatherNode!=null and fatherNode!=''">
+				and fatherNode = #{fatherNode,jdbcType=BIGINT}
+			</if>
+			<if test="nodeId!=null and nodeId!=''">
+				and nodeId = #{nodeId,jdbcType=BIGINT}
+			</if>
+			<if test="className!=null and className!=''">
+				and className like '%'||#{className,jdbcType=VARCHAR}||'%'
+			</if>
+		</where>
+	</select>
+	
+	<insert id="insertByEntity" parameterType="com.bsth.si.entity.Productionclass">
+		insert into t_productionclass
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+      		<if test="id!=null ">
+				id,
+			</if>
+      		<if test="level!=null ">
+				level,
+			</if>
+      		<if test="fatherNode!=null ">
+				fatherNode,
+			</if>
+      		<if test="nodeId!=null ">
+				nodeId,
+			</if>
+      		<if test="className!=null ">
+				className,
+			</if>
+    	</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+      		<if test="id!=null ">
+      			#{id,jdbcType=BIGINT},
+			</if>
+      		<if test="level!=null ">
+      			#{level,jdbcType=BIGINT},
+			</if>
+      		<if test="fatherNode!=null ">
+      			#{fatherNode,jdbcType=BIGINT},
+			</if>
+      		<if test="nodeId!=null ">
+      			#{nodeId,jdbcType=BIGINT},
+			</if>
+      		<if test="className!=null ">
+      			#{className,jdbcType=VARCHAR},
+			</if>
+    	</trim>
+	</insert>
+	
+	<delete id="deleteByEntity" parameterType="com.bsth.si.entity.Productionclass">
+		delete from t_productionclass
+		<where>
+      		<if test="id!=null ">
+				and id=#{id,jdbcType=BIGINT}
+			</if>
+      		<if test="level!=null ">
+				and level=#{level,jdbcType=BIGINT}
+			</if>
+      		<if test="fatherNode!=null ">
+				and fatherNode=#{fatherNode,jdbcType=BIGINT}
+			</if>
+      		<if test="nodeId!=null ">
+				and nodeId=#{nodeId,jdbcType=BIGINT}
+			</if>
+      		<if test="className!=null ">
+				and className=#{className,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</delete>
+
+	<update id="updateByEntity" parameterType="com.bsth.si.entity.Productionclass">
+		update t_productionclass
+		<set>
+			<if test="level!=null ">
+				level=#{level,jdbcType=BIGINT},
+			</if>
+			<if test="fatherNode!=null ">
+				fatherNode=#{fatherNode,jdbcType=BIGINT},
+			</if>
+			<if test="nodeId!=null ">
+				nodeId=#{nodeId,jdbcType=BIGINT},
+			</if>
+			<if test="className!=null ">
+				className=#{className,jdbcType=VARCHAR},
+			</if>
+		</set>
+		<where>
+			<if test="id!=null ">
+				and id=#{id,jdbcType=BIGINT}
+			</if>
+		</where>
+	</update>
+
+	<select id="selectSingle" resultType="com.bsth.si.entity.Productionclass" resultMap="productionclass_result_map">
+		select id,level,fatherNode,nodeId,className from t_productionclass
+		<where>
+			<if test="id!=null ">
+				and id=#{id,jdbcType=BIGINT}
+			</if>
+			<if test="level!=null ">
+				and level=#{level,jdbcType=BIGINT}
+			</if>
+			<if test="fatherNode!=null ">
+				and fatherNode=#{fatherNode,jdbcType=BIGINT}
+			</if>
+			<if test="nodeId!=null ">
+				and nodeId=#{nodeId,jdbcType=BIGINT}
+			</if>
+			<if test="className!=null ">
+				and className=#{className,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectByObject" resultMap="productionclass_result_map" >
+		select id,level,fatherNode,nodeId,className from t_productionclass
+		<where>
+			<if test="id!=null ">
+				and id=#{id,jdbcType=BIGINT}
+			</if>
+			<if test="level!=null ">
+				and level=#{level,jdbcType=BIGINT}
+			</if>
+			<if test="fatherNode!=null ">
+				and fatherNode=#{fatherNode,jdbcType=BIGINT}
+			</if>
+			<if test="nodeId!=null ">
+				and nodeId=#{nodeId,jdbcType=BIGINT}
+			</if>
+			<if test="className!=null ">
+				and className=#{className,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryByObject" resultMap="productionclass_result_map" >
+		<include refid="base_page_query_begin"/>
+		SELECT id,level,fatherNode,nodeId,className FROM t_productionclass 
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id,jdbcType=BIGINT}
+			</if>
+			<if test="level!=null and level!=''">
+				and level = #{level,jdbcType=BIGINT}
+			</if>
+			<if test="fatherNode!=null and fatherNode!=''">
+				and fatherNode = #{fatherNode,jdbcType=BIGINT}
+			</if>
+			<if test="nodeId!=null and nodeId!=''">
+				and nodeId = #{nodeId,jdbcType=BIGINT}
+			</if>
+			<if test="className!=null and className!=''">
+				and className like '%'||#{className,jdbcType=VARCHAR}||'%'
+			</if>
+		</where>
+			<if test="sortName!=null and sortName!=''">
+				ORDER BY ${sortName} ${sortOrder}
+			</if>
+		<include refid="base_page_query_end"/>
+	</select>
+</mapper>
